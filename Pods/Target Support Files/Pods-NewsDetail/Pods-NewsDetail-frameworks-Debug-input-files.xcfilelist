@@ -1,0 +1,4 @@
+${PODS_ROOT}/Target Support Files/Pods-NewsDetail/Pods-NewsDetail-frameworks.sh
+${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework
+${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework
+${BUILT_PRODUCTS_DIR}/ReactiveCocoa/ReactiveCocoa.framework
