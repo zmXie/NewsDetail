@@ -149,38 +149,43 @@
 
     CGFloat netOffsetY = offsetY - headViewHeight;
     
-    if (netOffsetY <= 0 && !atBottom) //webview滑动到顶部之前
+    if (netOffsetY <= 0 && !atBottom) //webview的top滑动到顶部之前
     {
+        //固定webview和tableView，滑动scrollView
         self.contentTopLayout.constant = 0;
         self.webView.scrollView.contentOffset = CGPointZero;
         self.tableView.contentOffset = CGPointZero;
     }
-    else if(netOffsetY < webViewContentHeight - webViewHeight && !atBottom) //webview滑动到底部之前
+    else if(netOffsetY < webViewContentHeight - webViewHeight && !atBottom) //webview的bottom滑动到底部之前
     {
+        //滑动webView，固定tableView
         self.contentTopLayout.constant = netOffsetY;
         self.webView.scrollView.contentOffset = CGPointMake(0, netOffsetY);
         self.tableView.contentOffset = CGPointZero;
     }
-    else if(netOffsetY < webViewContentHeight && !atBottom) //webview滑动到顶部之前
+    else if(netOffsetY < webViewContentHeight && !atBottom) //webview的bottom滑动到顶部之前
     {
+        //webView滑动到底部，固定webview和tableView，滑动contentView
         self.contentTopLayout.constant = webViewContentHeight - webViewHeight;
         self.webView.scrollView.contentOffset = CGPointMake(0, webViewContentHeight - webViewHeight);
         self.tableView.contentOffset = CGPointZero;
     }
     else if(netOffsetY < webViewContentHeight + tableViewContentHeight - tableViewHeight && !atBottom)
-    { //tablview滑动到底部之前
+    { //tablview滑动到底之前
+        //固定webview，滑动tableView
         self.contentTopLayout.constant = netOffsetY - webViewHeight;
         self.webView.scrollView.contentOffset = CGPointMake(0, webViewContentHeight - webViewHeight);
         self.tableView.contentOffset = CGPointMake(0, netOffsetY - webViewContentHeight);
     }
     else
-    { //scrollview滑动到底部
+    { //scrollview滑动到底部之后
         self.contentTopLayout.constant = self.contentSize.height - CGRectGetHeight(self.contentView.bounds);
         //beyond：scrollView滑动到底部回弹的距离，把contentView往下移动回弹的距离，只保留tableview的回弹效果
         CGFloat beyond = offsetY + CGRectGetHeight(self.bounds) - self.contentSize.height;
         if (beyond > 0 && tableViewHeight == scrollViewHeight) {
             self.contentTopLayout.constant += beyond;
         }
+        //固定webview的contentoffset
         self.webView.scrollView.contentOffset = CGPointMake(0, webViewContentHeight - webViewHeight);
         CGFloat contentInsetBottom;
         if (@available (iOS 11.0, *)) {
@@ -188,6 +193,7 @@
         } else {
             contentInsetBottom = self.tableView.contentInset.bottom;
         }
+        //tablview继续回弹，可以触发上拉刷新
         self.tableView.contentOffset = CGPointMake(0, MAX(0, netOffsetY - webViewContentHeight)+ contentInsetBottom);
     }
 }
