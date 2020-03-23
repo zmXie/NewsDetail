@@ -8,6 +8,7 @@
 
 #import "WTScrollView.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
+#import <ReactiveCocoa/NSObject+RACKVOWrapper.h>
 #import <Masonry/Masonry.h>
 
 @interface WTScrollView ()
@@ -94,8 +95,8 @@
     _tabHeightLayout = [tabHeightLayout valueForKey:@"layoutConstraint"];
     
     //配置
-    _webView.scrollView.scrollEnabled = NO;
-    _tableView.scrollEnabled = NO;
+    _webView.scrollView.scrollEnabled = _tableView.scrollEnabled = NO;
+    _webView.scrollView.delaysContentTouches = _tableView.delaysContentTouches = NO;
     self.decelerationRate = _webView.scrollView.decelerationRate = _tableView.decelerationRate = UIScrollViewDecelerationRateNormal;
 }
 
@@ -104,14 +105,26 @@
     RACSignal *headerSignal = [[RACObserve(self.headView, bounds) distinctUntilChanged] map:^id(id value) {
         return @([value CGRectValue].size.height);
     }];
-    RACSignal *webSignal = [[[RACObserve(self.webView.scrollView,contentSize) skip:1] distinctUntilChanged] map:^id(id value) {
-        return @([value CGSizeValue].height);
-    }];
     RACSignal *tabSignal = [[[RACObserve(self.tableView,contentSize) skip:1] distinctUntilChanged] map:^id(id value) {
         return @([value CGSizeValue].height);
     }];
-    
     @weakify(self)
+    RACSignal *webSignal = [[[[[self.webView.scrollView rac_valuesAndChangesForKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld observer:nil] skip:1] distinctUntilChanged] doNext:^(id x) {
+        //如果webview的内容高度变小，则滑动到顶部，否则手动触发一下滑动KVO去及时更新偏移量
+        @strongify(self)
+        RACTupleUnpack(NSValue *size,NSDictionary *change) = x;
+        CGFloat n = [size CGSizeValue].height;
+        CGFloat o = [change[NSKeyValueChangeOldKey] CGSizeValue].height;
+        if (n < o) {
+            [self scrollToWebAnimated:NO];
+        } else {
+            [self didScrollWithOffsetY:self.contentOffset.y];
+        }
+    }] map:^id(id value) {
+        RACTupleUnpack(NSValue *size) = value;
+        return @([size CGSizeValue].height);
+    }];
+    
     //更新webview高度
     RAC(self.webHeightLayout,constant) = [webSignal map:^id(id value) {
         @strongify(self)
@@ -126,7 +139,6 @@
     RAC(self,contentSize) = [[RACSignal combineLatest:@[headerSignal,webSignal,tabSignal]] reduceEach:^id(NSNumber *h1,NSNumber *h2,NSNumber *h3){
         @strongify(self)
         CGSize size = CGSizeMake(self.contentSize.width, h1.doubleValue + h2.doubleValue + h3.doubleValue);
-        NSLog(@"==%@",NSStringFromCGSize(size));
         return [NSValue valueWithCGSize:size];
     }];
     //监听self滑动
@@ -217,7 +229,7 @@
 
 - (void)scrollToWebAnimated:(BOOL)animated
 {
-    [self setContentOffset:[self getOffsetWithY:CGRectGetHeight(self.headView.frame)] animated:YES];
+    [self setContentOffset:[self getOffsetWithY:CGRectGetHeight(self.headView.frame)] animated:animated];
 }
 
 - (void)scrollToTableAnimated:(BOOL)animated

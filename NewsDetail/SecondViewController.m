@@ -162,21 +162,6 @@
 }
 
 #pragma mark - WKNavigationDelegate
-- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
-    NSString *strRequest = [navigationAction.request.URL.absoluteString stringByRemovingPercentEncoding];
-
-    if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
-        
-        decisionHandler(WKNavigationActionPolicyCancel);
-    } else {
-        if (navigationAction.targetFrame == nil) {
-            [webView loadRequest:navigationAction.request];
-        }
-        decisionHandler(WKNavigationActionPolicyAllow);
-    }
-    //也充重新加载时滑动到顶部
-    [self.wtScrollView scrollToHeadAnimated:NO];
-}
 
 #pragma mark - WTScrollViewDataSource
 - (WKWebView *)webViewInWtScrollView:(WTScrollView *)wtScrollView
