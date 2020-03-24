@@ -66,7 +66,7 @@
         }];
     }
     [_contentView addSubview:_headView];
-    [_headView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [_headView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.mas_equalTo(0);
         make.width.equalTo(self);
     }];
