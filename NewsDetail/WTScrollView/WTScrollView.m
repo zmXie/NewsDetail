@@ -110,13 +110,17 @@
     }];
     @weakify(self)
     RACSignal *webSignal = [[[[[self.webView.scrollView rac_valuesAndChangesForKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld observer:nil] skip:1] distinctUntilChanged] doNext:^(id x) {
-        //如果webview的内容高度变小，则滑动到顶部，否则手动触发一下滑动KVO去及时更新偏移量
+        //如果webview的内容高度缩小超过误差范围，则滑动到顶部，否则手动触发一下滑动KVO及时更新偏移量
         @strongify(self)
         RACTupleUnpack(NSValue *size,NSDictionary *change) = x;
         CGFloat n = [size CGSizeValue].height;
         CGFloat o = [change[NSKeyValueChangeOldKey] CGSizeValue].height;
-        if (n < o) {
-            [self scrollToWebAnimated:NO];
+        if (o - n > CGRectGetHeight(self.bounds)) {
+            CGPoint webTopPoint = [self getOffsetWithY:CGRectGetHeight(self.headView.frame)];
+            //只允许向上滑动
+            if (self.contentOffset.y > webTopPoint.y) {
+                [self setContentOffset:webTopPoint];
+            }
         } else {
             [self didScrollWithOffsetY:self.contentOffset.y];
         }

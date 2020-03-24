@@ -102,7 +102,9 @@
 //    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.medcircle.cn/osteoprosisonline/detail/254?type=2"]]];
 //    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://community.test.file.mediportal.com.cn/c6d12928a5b848d2972900a569c49389"]]];
 //    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://www.baidu.com"]]];
-    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://www.jianshu.com/app?utm_medium=app-download-bottom&utm_source=mobile"]]];
+//    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://weibo.com/2803301701/I1UyxmEqg?type=comme"]]];
+//    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://www.jianshu.com/app?utm_medium=app-download-bottom&utm_source=mobile"]]];
+    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://mp.weixin.qq.com/s/wZCg-G-wVJfYZX_vR91h0A"]]];
 }
 
 #pragma mark - Lazzy
