@@ -109,7 +109,7 @@
         return @([value CGSizeValue].height);
     }];
     @weakify(self)
-    RACSignal *webSignal = [[[[[self.webView.scrollView rac_valuesAndChangesForKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld observer:nil] skip:1] distinctUntilChanged] doNext:^(id x) {
+    RACSignal *webSignal = [[[[[[self.webView.scrollView rac_valuesAndChangesForKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld observer:nil] skip:1] distinctUntilChanged]takeUntil:self.rac_willDeallocSignal] doNext:^(id x) {
         //如果webview的内容高度缩小超过误差范围，则滑动到顶部，否则手动触发一下滑动KVO及时更新偏移量
         @strongify(self)
         RACTupleUnpack(NSValue *size,NSDictionary *change) = x;

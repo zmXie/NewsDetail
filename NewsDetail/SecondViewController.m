@@ -99,12 +99,14 @@
 
 - (void)setWebUrl
 {
-//    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.medcircle.cn/osteoprosisonline/detail/254?type=2"]]];
-//    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://community.test.file.mediportal.com.cn/c6d12928a5b848d2972900a569c49389"]]];
-//    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://www.baidu.com"]]];
-//    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://weibo.com/2803301701/I1UyxmEqg?type=comme"]]];
-//    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://www.jianshu.com/app?utm_medium=app-download-bottom&utm_source=mobile"]]];
-    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://mp.weixin.qq.com/s/wZCg-G-wVJfYZX_vR91h0A"]]];
+    NSArray *urlArray = @[@"http://www.medcircle.cn/osteoprosisonline/detail/254?type=2",
+                          @"http://community.test.file.mediportal.com.cn/c6d12928a5b848d2972900a569c49389",
+                          @"https://www.baidu.com",
+                          @"https://weibo.com/2803301701/I1UyxmEqg?type=comme",
+                          @"https://www.jianshu.com/app?utm_medium=app-download-bottom&utm_source=mobile",
+                      @"http://test.mediportal.com.cn/doctororg/web/H5/wechatShare.html?title=xx&link=%2F%2Fcommunity.test.file.dachentech.com.cn%2Ff52eacd4cd2342678e5b9e90730db467&logo=http%3A%2F%2Fcommunity.test.file.dachentech.com.cn%2FFneocaG2U5OPgPoBTHRLfa9mY0cr%3FimageMogr2%2Fcrop%2F%21640x360a0a411.20000000000005&desc=xx",
+                          @"https://mp.weixin.qq.com/s/wZCg-G-wVJfYZX_vR91h0A"];
+    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlArray[arc4random()%urlArray.count]]]];
 }
 
 #pragma mark - Lazzy
